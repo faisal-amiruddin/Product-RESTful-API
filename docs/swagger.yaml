@@ -1,0 +1,187 @@
+basePath: /api/v1
+definitions:
+  models.CreateProductInput:
+    properties:
+      description:
+        example: Laptop spek dewa
+        type: string
+      price:
+        example: 15000000
+        type: number
+      stock:
+        example: 10
+        type: integer
+      title:
+        example: Laptop Gaming
+        type: string
+    type: object
+  models.Product:
+    properties:
+      created_at:
+        type: string
+      deleted_at:
+        type: string
+      description:
+        type: string
+      id:
+        type: integer
+      price:
+        type: number
+      stock:
+        type: integer
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+host: 127.0.0.1:3000
+info:
+  contact: {}
+  description: REST API menggunakan Fiber dan GORM.
+  title: Simple Product REST API
+  version: "1.0"
+paths:
+  /products:
+    get:
+      consumes:
+      - application/json
+      description: Mengambil daftar semua produk dari database
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Returns list of products
+          schema:
+            additionalProperties:
+              items:
+                $ref: '#/definitions/models.Product'
+              type: array
+            type: object
+      summary: Get all products
+      tags:
+      - Products
+    post:
+      consumes:
+      - application/json
+      description: Membuat entri produk baru di database
+      parameters:
+      - description: Product data input
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateProductInput'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Returns created product data
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/models.Product'
+            type: object
+        "400":
+          description: Input tidak valid
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Create a new product
+      tags:
+      - Products
+  /products/{id}:
+    delete:
+      consumes:
+      - application/json
+      description: Menghapus produk berdasarkan ID (Soft Delete GORM)
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "204":
+          description: No Content
+          schema:
+            type: string
+        "404":
+          description: Product not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Delete a product
+      tags:
+      - Products
+    get:
+      consumes:
+      - application/json
+      description: Mengambil data produk berdasarkan ID
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Returns product data
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/models.Product'
+            type: object
+        "404":
+          description: Product not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Get a single product by ID
+      tags:
+      - Products
+    put:
+      consumes:
+      - application/json
+      description: Memperbarui data produk yang sudah ada
+      parameters:
+      - description: Product ID
+        in: path
+        name: id
+        required: true
+        type: integer
+      - description: Updated product data
+        in: body
+        name: product
+        required: true
+        schema:
+          $ref: '#/definitions/models.CreateProductInput'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Product berhasil diperbarui
+          schema:
+            additionalProperties:
+              $ref: '#/definitions/models.Product'
+            type: object
+        "400":
+          description: Input tidak valid
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+        "404":
+          description: Product not found
+          schema:
+            additionalProperties:
+              type: string
+            type: object
+      summary: Update an existing product
+      tags:
+      - Products
+swagger: "2.0"
