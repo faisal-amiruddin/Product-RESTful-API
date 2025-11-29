@@ -9,6 +9,11 @@ func Setup(app *fiber.App) {
     api := app.Group("/api")
 	v1 := api.Group("/v1")
 
-    v1.Get("/products", controllers.GetProducts)
-    v1.Post("/products", controllers.CreateProduct)
+	product := v1.Group("/products")
+
+    product.Get("/", controllers.GetProducts)
+    product.Post("/", controllers.CreateProduct)
+	product.Get("/:id", controllers.GetSingleProduct)
+    product.Put("/:id", controllers.UpdateProduct)
+    product.Delete("/:id", controllers.DeleteProduct)
 }
